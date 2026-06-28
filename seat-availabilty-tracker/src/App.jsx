@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
 
 const App =() => {
   const [count, setCount] = useState(200);
+  const [seconds, setSeconds] = useState(0);
 
   let badgeColor = "";
   let badgeText = "";
+
 
   if (count > 50){
     badgeColor = "green";
@@ -29,11 +31,30 @@ const App =() => {
     setCount((prev) => Math.min(200, prev + 1));
   };
 
+
+  useEffect(() => {
+  const interval = setInterval(() => {
+    setSeconds((prevSeconds) => prevSeconds + 1);
+  }, 1000);
+  return () => {
+    clearInterval(interval);
+  };
+}, []);
+
+useEffect(() => {
+  if(count === 0){
+    console.log("ALERT: Venue is sold out!");
+  }
+}, [count]);
+
+
+
+
  return(
-<div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
+    <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
           <SeatBadge text={badgeText} color={badgeColor} />
-          <SeatCounter count={count} />
-<div className="flex flex-col gap-4 max-w-xs">
+          <SeatCounter count={count} seconds={seconds} />
+      <div className="flex flex-col gap-4 max-w-xs">
   <button 
     onClick={bookSeat} 
     disabled={count === 0} 
