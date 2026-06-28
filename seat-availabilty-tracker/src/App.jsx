@@ -1,4 +1,6 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
+import SeatBadge from "./SeatBadge";
+import SeatCounter from "./SeatCounter";
 
 const App =() => {
   const [count, setCount] = useState(200);
@@ -28,9 +30,9 @@ const App =() => {
   };
 
  return(
-  <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
-      <span style={{ backgroundColor: badgeColor, color: 'white', padding: '10px 30px', borderRadius: '0.25rem' }}>{badgeText}</span>
-      <p style={{ fontSize: '2rem', fontWeight: 'bold', borderRadius: '10px', border: '2px solid grey', padding: '10px 40px', margin: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>{count}</p>
+<div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
+          <SeatBadge text={badgeText} color={badgeColor} />
+          <SeatCounter count={count} />
 <div className="flex flex-col gap-4 max-w-xs">
   <button 
     onClick={bookSeat} 
@@ -48,7 +50,6 @@ const App =() => {
     Release Seat
   </button>
 </div>
-
   </div>
  );
 };
