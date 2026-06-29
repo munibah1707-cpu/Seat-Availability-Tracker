@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
+import AdminPanel from "./AdminPanel";
 
 const App =() => {
   const [count, setCount] = useState(200);
@@ -48,13 +49,12 @@ useEffect(() => {
 }, [count]);
 
 
-
-
  return(
     <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
           <SeatBadge text={badgeText} color={badgeColor} />
           <SeatCounter count={count} seconds={seconds} />
       <div className="flex flex-col gap-4 max-w-xs">
+        <AdminPanel onSetSeats={setCount} />
   <button 
     onClick={bookSeat} 
     disabled={count === 0} 
