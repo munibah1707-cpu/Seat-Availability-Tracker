@@ -1,11 +1,23 @@
-import React from 'react'
+import React from "react";
 
-const SeatCounter = ({ count,seconds }) => {
+const SeatCounter = ({ available, total, seconds }) => {
   return (
-      <div>
-        <p style={{ fontSize: '2rem', fontWeight: 'bold', borderRadius: '10px', border: '2px solid grey', padding: '10px 40px', margin: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>{count}</p>
-        <p>Session: {seconds}s</p>
+    <div className="mb-6">
+      
+      <div className="text-[44px] font-bold tracking-tight text-gray-900 leading-none">
+        {available}
       </div>
-  )
+      
+      <div className="text-sm font-medium text-gray-500 mt-1">
+        Available out of {total}
+      </div>
+      
+
+      <div className="text-xs font-mono text-gray-400 mt-3">
+        Session: {seconds}s
+      </div>
+    </div>
+  );
 }
+
 export default SeatCounter;
