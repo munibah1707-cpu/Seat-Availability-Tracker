@@ -1,8 +1,16 @@
 import React from "react";
+// 1. Import SeatBadge inside SeatCounter.jsx
+import SeatBadge from "./SeatBadge";
 
-const SeatCounter = ({ available, total, seconds }) => {
+// 2. Receive those new props (badgeText, badgeColor) alongside existing ones
+const SeatCounter = ({ available, total, seconds, badgeText, badgeColor }) => {
   return (
     <div className="mb-6">
+      
+      {/* 3. Render <SeatBadge /> inside SeatCounter's returned JSX */}
+      <div className="mb-4">
+        <SeatBadge color={badgeColor} text={badgeText} />
+      </div>
       
       <div className="text-[44px] font-bold tracking-tight text-gray-900 leading-none">
         {available}
@@ -12,7 +20,6 @@ const SeatCounter = ({ available, total, seconds }) => {
         Available out of {total}
       </div>
       
-
       <div className="text-xs font-mono text-gray-400 mt-3">
         Session: {seconds}s
       </div>

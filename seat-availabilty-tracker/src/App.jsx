@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
+import { useTheme } from "./ThemeContext";
 
 const initialSeats = [
   { id: "s1", seatNumber: "A1", isOccupied: false },
@@ -21,6 +22,7 @@ const App = () => {
 
   const totalSeats = seats.length;
   const availableSeats = seats.filter((seat) => !seat.isOccupied).length;
+  const { toggleTheme } = useTheme();
 
   let badgeColor = "";
   let badgeText = "";
@@ -65,13 +67,20 @@ const App = () => {
 
   return (
     <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
-      
-      <SeatBadge text={badgeText} color={badgeColor} />
-      
-      <SeatCounter available={availableSeats} total={totalSeats} seconds={seconds} />
-      
+      <SeatCounter 
+        available={availableSeats} 
+        total={totalSeats} 
+        seconds={seconds} 
+        badgeColor={badgeColor} 
+        badgeText={badgeText} 
+      />
       <div className="flex flex-col gap-4 max-w-xs w-full">
-        
+        <button
+          onClick={toggleTheme}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >
+          Toggle Theme
+        </button> 
         
         {seats.length === 0 ? (
           <p className="text-sm text-gray-500 italic text-center">No seats configured.</p>
