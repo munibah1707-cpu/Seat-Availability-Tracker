@@ -1,43 +1,20 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
 import { useTheme } from "./ThemeContext";
 import { seatsReducer, initialSeats } from "./seatsReducer";
 
+// 1. Import your custom hooks
+import useSessionTimer from "./useSessionTimer";
+import useSeatStats from "./useSeatStats";
+
 const App = () => {
-
   const [seats, dispatch] = useReducer(seatsReducer, initialSeats);
-  const [seconds, setSeconds] = useState(0);
-
-
-  const totalSeats = seats.length;
-  const availableSeats = seats.filter((seat) => !seat.isOccupied).length;
   const { toggleTheme } = useTheme();
 
-  let badgeColor = "";
-  let badgeText = "";
-
-  if (availableSeats === 0) {
-    badgeColor = "orange";
-    badgeText = "Sold Out";
-  } else if (availableSeats <= 2) {
-    badgeColor = "red";
-    badgeText = "Almost Full";
-  } else if (availableSeats <= 5) {
-    badgeColor = "yellow";
-    badgeText = "Filling Up";
-  } else {
-    badgeColor = "green";
-    badgeText = "Available";
-  }
-
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((prevSeconds) => prevSeconds + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // 2. Call custom hooks
+  const seconds = useSessionTimer();
+  const { totalSeats, availableSeats, badgeText, badgeColor } = useSeatStats(seats);
 
   useEffect(() => {
     if (availableSeats === 0) {
@@ -45,9 +22,7 @@ const App = () => {
     }
   }, [availableSeats]);
 
-
-
-return (
+  return (
     <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
       <SeatCounter 
         available={availableSeats} 
@@ -64,7 +39,6 @@ return (
           Toggle Theme
         </button> 
 
-        {/* 2. Added Action Buttons for Reset and Occupy All */}
         <div className="flex gap-2">
           <button
             onClick={() => dispatch({ type: "RESET_SEATS" })}
@@ -94,7 +68,6 @@ return (
             {seats.map((seat) => (
               <button
                 key={seat.id} 
-                // 3. Dispatch TOGGLE_SEAT on click
                 onClick={() => dispatch({ type: "TOGGLE_SEAT", id: seat.id })}
                 style={{
                   padding: "12px 4px",
