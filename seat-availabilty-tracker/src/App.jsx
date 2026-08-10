@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
 import { useTheme } from "./ThemeContext";
-
-const initialSeats = [
-  { id: "s1", seatNumber: "A1", isOccupied: false },
-  { id: "s2", seatNumber: "A2", isOccupied: true },
-  { id: "s3", seatNumber: "A3", isOccupied: false },
-  { id: "s4", seatNumber: "A4", isOccupied: false },
-  { id: "s5", seatNumber: "B1", isOccupied: false },
-  { id: "s6", seatNumber: "B2", isOccupied: true },
-  { id: "s7", seatNumber: "B3", isOccupied: false },
-  { id: "s8", seatNumber: "B4", isOccupied: false },
-];
+import { seatsReducer, initialSeats } from "./seatsReducer";
 
 const App = () => {
 
-  const [seats, setSeats] = useState(initialSeats);
+  const [seats, dispatch] = useReducer(seatsReducer, initialSeats);
   const [seconds, setSeconds] = useState(0);
 
 
@@ -41,14 +31,6 @@ const App = () => {
     badgeText = "Available";
   }
 
-  const handleSeatClick = (id) => {
-    setSeats((prevSeats) =>
-      prevSeats.map((seat) =>
-        seat.id === id ? { ...seat, isOccupied: !seat.isOccupied } : seat
-      )
-    );
-  };
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,7 +47,7 @@ const App = () => {
 
 
 
-  return (
+return (
     <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
       <SeatCounter 
         available={availableSeats} 
@@ -81,6 +63,22 @@ const App = () => {
         >
           Toggle Theme
         </button> 
+
+        {/* 2. Added Action Buttons for Reset and Occupy All */}
+        <div className="flex gap-2">
+          <button
+            onClick={() => dispatch({ type: "RESET_SEATS" })}
+            className="flex-1 px-3 py-2 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition"
+          >
+            Reset Seats
+          </button>
+          <button
+            onClick={() => dispatch({ type: "OCCUPY_ALL" })}
+            className="flex-1 px-3 py-2 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition"
+          >
+            Occupy All
+          </button>
+        </div>
         
         {seats.length === 0 ? (
           <p className="text-sm text-gray-500 italic text-center">No seats configured.</p>
@@ -96,7 +94,8 @@ const App = () => {
             {seats.map((seat) => (
               <button
                 key={seat.id} 
-                onClick={() => handleSeatClick(seat.id)}
+                // 3. Dispatch TOGGLE_SEAT on click
+                onClick={() => dispatch({ type: "TOGGLE_SEAT", id: seat.id })}
                 style={{
                   padding: "12px 4px",
                   borderRadius: "8px",
@@ -104,7 +103,6 @@ const App = () => {
                   fontWeight: "700",
                   cursor: "pointer",
                   border: "2px solid",
-                
                   backgroundColor: seat.isOccupied ? "#fecaca" : "#dcfce7", 
                   borderColor: seat.isOccupied ? "#ef4444" : "#22c55e",
                   color: seat.isOccupied ? "#b91c1c" : "#15803d",
