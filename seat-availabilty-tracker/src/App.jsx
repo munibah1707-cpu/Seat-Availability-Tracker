@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useRef, useEffect } from "react";
+import React, { useReducer, useState, useRef, useEffect, useCallback, useMemo } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
 import { useTheme } from "./ThemeContext";
@@ -17,6 +17,19 @@ const App = () => {
   const seconds = useSessionTimer();
   const { totalSeats, availableSeats, badgeText, badgeColor } = useSeatStats(seats);
 
+  const seatSummary = useMemo(() => {
+  const occupied = seats.filter((s) => s.isOccupied).length;
+  const available = seats.filter((s) => !s.isOccupied).length;
+  
+  // Calculate percentage (avoid dividing by zero if seats array is empty)
+  const occupancyRate = seats.length > 0 
+    ? Math.round((occupied / seats.length) * 100) 
+    : 0;
+
+  return { occupied, available, occupancyRate };
+}, [seats]); // 👈 What should go in the dependency array? (Think about what values it uses!)
+
+
   useEffect(() => {
     if (availableSeats === 0) {
       console.warn("ALERT: Venue is sold out!");
@@ -29,10 +42,6 @@ const App = () => {
   const inputRef = useRef(null);         // Ref 1: Targets physical input element
   const toggleCountRef = useRef(0);      // Ref 2: Tracks clicks without triggering re-renders
 
-  // Justification for Uncontrolled Input:
-  // We use a local standard state just for the typed value display, 
-  // but Ref 1 is strictly dedicated to setting the direct browser focus on layout boot.
-
   const [venueName, setVenueName] = useState("Main Hall Arena");
 // 2. EFFECTS AND CLICK HANDLERS
   
@@ -44,14 +53,12 @@ const App = () => {
   }, []);
 
 
-  // Updated click handler to capture action data metrics
-  const handleSeatClick = (id) => {
-    // Increment the persistence tracker reference value
+  const handleSeatClick = useCallback((id) => {
     toggleCountRef.current++;
 
     // Dispatch the actual visual grid state shift
     dispatch({ type: "TOGGLE_SEAT", payload: id });
-  };
+ }, []);
 
   return (
     <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
@@ -68,6 +75,10 @@ const App = () => {
 {/* 2. Total Toggles Counter with Ref 2 */}
 <p className="text-sm font-semibold text-gray-700">
   Total toggles: {toggleCountRef.current}
+</p>
+
+<p className="text-sm font-semibold text-gray-700">
+  Occupancy: {seatSummary.occupancyRate}%
 </p>
 
       <SeatCounter 
