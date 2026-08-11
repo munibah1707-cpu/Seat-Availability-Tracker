@@ -7,7 +7,7 @@ const SeatsPage = ({
   seats,
   dispatch,
   handleSeatClick,
-  toggleCountRef,
+  toggleCount,
   seconds,
   availableSeats,
   totalSeats,
@@ -28,7 +28,7 @@ const SeatsPage = ({
 
       {/* 2. Total Toggles Counter */}
       <p className="text-sm font-semibold text-gray-700">
-        Total toggles: {toggleCountRef.current}
+        Total toggles: {toggleCount}
       </p>
 
       {/* 3. Seat Counter & Badge */}

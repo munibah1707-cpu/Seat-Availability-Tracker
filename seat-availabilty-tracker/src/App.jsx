@@ -53,7 +53,7 @@ const App = () => {
               seats={seats}
               dispatch={dispatch}
               handleSeatClick={handleSeatClick}
-              toggleCountRef={toggleCountRef}
+              toggleCount={toggleCountRef.current}
               seconds={seconds}
               availableSeats={availableSeats}
               totalSeats={totalSeats}
