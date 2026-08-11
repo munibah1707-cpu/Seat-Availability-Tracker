@@ -15,13 +15,13 @@ export function seatsReducer(state, action) {
       // We return a BRAND NEW array where one seat's isOccupied is flipped.
       // Remember: NEVER mutate state directly! Use .map() to return a copy.
       return state.map((seat) => 
-        seat.id === action.id ? { ...seat, isOccupied: !seat.isOccupied } : seat
+        seat.id === action.payload ? { ...seat, isOccupied: !seat.isOccupied } : seat
       );
 
     case "RESET_SEATS":
       // How do we restore all seats back to initialSeats?
       // (Think about what we should return here!)
-        return initialState;
+        return initialSeats;
 
     case "OCCUPY_ALL":
       // We want to return a BRAND NEW array where EVERY seat's isOccupied is true.

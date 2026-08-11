@@ -10,7 +10,7 @@ export function useSeatStats(seats = []){
     
     // Checks both 'isBooked' or 'status' conventions based on your state design
     const availableSeats = seats.filter(
-      (seat) => !seat.isBooked && seat.status !== 'booked'
+      (seat) => !seat.isOccupied
     ).length;
 
     let badgeText = 'Seats Available';

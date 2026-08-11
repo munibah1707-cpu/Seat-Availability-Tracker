@@ -1,10 +1,11 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useState, useRef, useEffect } from "react";
 import SeatBadge from "./SeatBadge";
 import SeatCounter from "./SeatCounter";
 import { useTheme } from "./ThemeContext";
 import { seatsReducer, initialSeats } from "./seatsReducer";
 
 // 1. Import your custom hooks
+
 import useSessionTimer from "./useSessionTimer";
 import useSeatStats from "./useSeatStats";
 
@@ -22,8 +23,53 @@ const App = () => {
     }
   }, [availableSeats]);
 
+  
+  // 1. REF USE CASES INITIALIZATION
+
+  const inputRef = useRef(null);         // Ref 1: Targets physical input element
+  const toggleCountRef = useRef(0);      // Ref 2: Tracks clicks without triggering re-renders
+
+  // Justification for Uncontrolled Input:
+  // We use a local standard state just for the typed value display, 
+  // but Ref 1 is strictly dedicated to setting the direct browser focus on layout boot.
+
+  const [venueName, setVenueName] = useState("Main Hall Arena");
+// 2. EFFECTS AND CLICK HANDLERS
+  
+ // Ref 1 Effect: Triggers exactly once on initial load to snap the cursor focus
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
+
+  // Updated click handler to capture action data metrics
+  const handleSeatClick = (id) => {
+    // Increment the persistence tracker reference value
+    toggleCountRef.current++;
+
+    // Dispatch the actual visual grid state shift
+    dispatch({ type: "TOGGLE_SEAT", payload: id });
+  };
+
   return (
     <div className="flex h-screen items-center justify-center flex-col gap-4 bg-red-200">
+
+<input
+  ref={inputRef}
+  type="text"
+  value={venueName}
+  onChange={(e) => setVenueName(e.target.value)}
+  className="px-3 py-2 rounded border border-gray-400 text-center font-bold text-gray-800"
+  placeholder="Venue Name"
+/>
+
+{/* 2. Total Toggles Counter with Ref 2 */}
+<p className="text-sm font-semibold text-gray-700">
+  Total toggles: {toggleCountRef.current}
+</p>
+
       <SeatCounter 
         available={availableSeats} 
         total={totalSeats} 
@@ -68,7 +114,7 @@ const App = () => {
             {seats.map((seat) => (
               <button
                 key={seat.id} 
-                onClick={() => dispatch({ type: "TOGGLE_SEAT", id: seat.id })}
+              onClick={() => handleSeatClick(seat.id)}
                 style={{
                   padding: "12px 4px",
                   borderRadius: "8px",
