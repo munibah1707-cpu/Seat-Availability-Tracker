@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import SeatCounter from "./SeatCounter";
 import { useTheme } from "./ThemeContext";
@@ -16,8 +16,26 @@ const SeatsPage = ({
 }) => {
   const { toggleTheme } = useTheme();
 
+  // 2. Add temporary crash state
+  const [hasCrashed, setHasCrashed] = useState(false);
+
+  // 3. Throw an error during render if triggered
+  if (hasCrashed) {
+    throw new Error("💥 Simulated Render Crash!");
+  }
+
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
+
+      {/* 4. Add temporary Crash Test button */}
+      <button
+        onClick={() => setHasCrashed(true)}
+        className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded hover:bg-red-700 transition"
+      >
+        💥 Crash Test
+      </button>
+
       {/* 1. Back to Home Link */}
       <Link
         to="/"

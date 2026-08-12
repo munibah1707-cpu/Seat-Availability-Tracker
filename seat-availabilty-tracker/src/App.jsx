@@ -5,6 +5,7 @@ import useSessionTimer from "./useSessionTimer";
 import useSeatStats from "./useSeatStats";
 import HomePage from "./HomePage";
 import SeatsPage from "./SeatsPage";
+import ErrorBoundary from "./ErrorBoundary";
 
 const App = () => {
   // 1. Central State & Refs
@@ -39,16 +40,19 @@ const App = () => {
         <Route
           path="/"
           element={
+            <ErrorBoundary>
             <HomePage
               venueName={venueName}
               setVenueName={setVenueName}
               seatSummary={seatSummary}
             />
+            </ErrorBoundary>
           }
         />
         <Route
           path="/seats"
           element={
+            <ErrorBoundary>
             <SeatsPage
               seats={seats}
               dispatch={dispatch}
@@ -60,6 +64,7 @@ const App = () => {
               badgeText={badgeText}
               badgeColor={badgeColor}
             />
+            </ErrorBoundary>
           }
         />
       </Routes>
